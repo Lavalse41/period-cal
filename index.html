@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Calendar Example</title>
+  <title>Period Calculater</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://kit.fontawesome.com/9b619cdf6b.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -64,12 +68,62 @@
       cursor: initial!important;
     }
 
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      color: #fff;
+      background-color: #711D20; 
+      border-radius: 0px;   
+    }
+    
+    .btn:hover {
+      background-color: #923236;
+    }
+
+    .bth-circle {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #711D20;  
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      border:none;
+    }
+
+    .center {
+      position: absolute ;
+      right: 35%;
+    }
+
+    .bth-circle:hover {
+      background-color: #923236;
+    }
+
+    #num-days, #num-diff {
+      font-size: 64px;
+      margin: 0 60px;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    #start-next-p, #end-next-p {
+      color: #FF4455;
+    }
+
+
   </style>
 </head>
 <body>
 
 <!-- 1. first day of period -->
-<div class="container" id="first-day-period">
+<div class="container">
   <h2>วันแรกของประจำเดือนเริ่มขึ้นเมื่อไหร่ ?</h2>
   <div style="display: flex; gap: 10px;">
       <select id="select-month" name="select-month">
@@ -79,39 +133,39 @@
       <input type="hidden" id="select-date" name="select-date" value="">
   </div>
   <div id="calendar"></div>
-  <button onclick="">ถัดไป</button>
+  <button class="btn" onclick="">ถัดไป<i style="margin-left: 10px;" class="fa-solid fa-angle-right"></i></button>
 </div>
 
 <!-- 2. numbers of days -->
 <div class="container">
   <h2>จำนวนวันที่ประจำเดือนมา</h2>
   <div style="display: flex; gap: 10px; align-items: center;">
-    <button onclick="handleMinusDate('num-days','num-days-input')"><</button>
+    <button class="bth-circle" onclick="handleMinusDate('num-days','num-days-input')"><i style="margin-left: 10px;" class="fa-solid fa-angle-left center"></i></button>
     <p id="num-days">5</p>
-    <button onclick="handleAddDate('num-days','num-days-input')">></button>
-    <input class="step-btn" type="hidden" id="num-days-input" value="5">
+    <button class="bth-circle" onclick="handleAddDate('num-days','num-days-input')"><i style="margin-left: 10px;" class="fa-solid fa-angle-right center"></i></button>
+    <input type="hidden" id="num-days-input" value="5">
   </div>
   
-  <button onclick="">ถัดไป</button>
+  <button class="btn" onclick="">ถัดไป<i style="margin-left: 10px;" class="fa-solid fa-angle-right"></i></button>
 </div>
 
 <div class="container">
   <h2>ความยาวรอบเดือนเฉลี่ย</h2>
   <div style="display: flex; gap: 10px; align-items: center;">
-    <button onclick="handleMinusDate('num-diff', 'num-diff-input')"><</button>
+    <button class="bth-circle" onclick="handleMinusDate('num-diff', 'num-diff-input')"><i style="margin-left: 10px;" class="fa-solid fa-angle-left center"></i></button>
     <p id="num-diff">28</p>
-    <button onclick="handleAddDate('num-diff', 'num-diff-input')">></button>
-    <input class="step-btn" type="hidden" id="num-diff-input" value="28">
+    <button class="bth-circle" onclick="handleAddDate('num-diff', 'num-diff-input')"><i style="margin-left: 10px;" class="fa-solid fa-angle-right center"></i></button>
+    <input type="hidden" id="num-diff-input" value="28">
   </div>
-  <button onclick="calNextPeriod()">คำนวณ</button>
+  <button class="btn" onclick="calNextPeriod()">คำนวณ</button>
 </div>
 
 <div class="container">
-  <p>ระยะเวลาประจำเดือนรอบถัดไปของคุณ</p>
-  <p>วันเริ่ม</p>
-  <p id="start-next-p"></p>
-  <p>วันสุดท้าย</p>
-  <p id="end-next-p"></p>
+  <h2>ระยะเวลาประจำเดือนรอบถัดไปของคุณ</h2>
+  <h3>วันเริ่ม</h3>
+  <h1 id="start-next-p"></h1>
+  <h3>วันสุดท้าย</h3>
+  <h1 id="end-next-p"></h1>
 
 </div>
 
