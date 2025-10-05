@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .calendar-table {
+      border-collapse: collapse;
+      margin: 20px auto;
+      width: 60%;
+    }
+    .calendar-table th,
+    .calendar-table td {
+      border: 1px solid #999;
+      text-align: center;
+      padding: 10px;
+      width: 14.2%;
+      height: 20px;
+    }
+    .calendar-header-day {
+      background-color: #FEDEDF;
+      font-weight: bold;
+    }
+    .calendar-day {
+      background-color: #FEDEDF
+    }
+    .monthLabel {
+      font-size: 20px;
+      text-align: center;
+      background: #FEDEDF;
+      padding: 10px;
+    }
+    
+    .calendar-table tr th:first-child,
+    .calendar-table tr th:last-child,
+    .calendar-table tr td:first-child,
+    .calendar-table tr td:last-child {
+      color: #FF4455;
+    }
+
+    .container {
+      width: 100%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    td.active {
+      background-color: #FF4455;
+      color: #fff;
+    }
+
+    td.calendar-day:hover {
+      cursor: pointer;
+    }
+
+    td.next {
+      cursor: initial!important;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- 1. first day of period -->
+<div class="container" id="first-day-period">
+  <h2>วันแรกของประจำเดือนเริ่มขึ้นเมื่อไหร่ ?</h2>
+  <div style="display: flex; gap: 10px;">
+      <select id="select-month" name="select-month">
+      </select>
+      <select id="select-year" name="select-year">
+      </select>
+      <input type="hidden" id="select-date" name="select-date" value="">
+  </div>
+  <div id="calendar"></div>
+  <button onclick="">ถัดไป</button>
+</div>
+
+<!-- 2. numbers of days -->
+<div class="container">
+  <h2>จำนวนวันที่ประจำเดือนมา</h2>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <button onclick="handleMinusDate('num-days','num-days-input')"><</button>
+    <p id="num-days">5</p>
+    <button onclick="handleAddDate('num-days','num-days-input')">></button>
+    <input class="step-btn" type="hidden" id="num-days-input" value="5">
+  </div>
+  
+  <button onclick="">ถัดไป</button>
+</div>
+
+<div class="container">
+  <h2>ความยาวรอบเดือนเฉลี่ย</h2>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <button onclick="handleMinusDate('num-diff', 'num-diff-input')"><</button>
+    <p id="num-diff">28</p>
+    <button onclick="handleAddDate('num-diff', 'num-diff-input')">></button>
+    <input class="step-btn" type="hidden" id="num-diff-input" value="28">
+  </div>
+  <button onclick="calNextPeriod()">คำนวณ</button>
+</div>
+
+<div class="container">
+  <p>ระยะเวลาประจำเดือนรอบถัดไปของคุณ</p>
+  <p>วันเริ่ม</p>
+  <p id="start-next-p"></p>
+  <p>วันสุดท้าย</p>
+  <p id="end-next-p"></p>
+
+</div>
+
+
+<script>
+
+function calNextPeriod() {
+  // Get Input Values
+  var inputs = document.querySelectorAll('input');
+  if (inputs.length < 3) {
+    throw new Error('Input Not Sufficient');
+  }
+  var data = {};
+  inputs.forEach(input => {
+    data[input.id] = input.value;
+  });
+
+  console.log(data);
+
+  var startDate = data['select-date'];
+  var numDays = parseInt(data['num-days-input'], 10);
+  var numDiff = parseInt(data['num-diff-input'], 10);
+
+  // Calculate Next Period
+  var nextPeriod = new Date(startDate);
+  nextPeriod.setDate(nextPeriod.getDate() + numDiff);
+  var endPeriod = new Date(nextPeriod);
+  endPeriod.setDate(endPeriod.getDate() + numDays - 1);
+ 
+  var startDay = nextPeriod.toISOString().split('T')[0]; 
+  var endDay = endPeriod.toISOString().split('T')[0]; 
+
+  console.log('Next Period Start Date: ' + startDay);
+  console.log('Next Period End Date: ' + endDay);
+
+  document.getElementById('start-next-p').textContent = startDay;
+  document.getElementById('end-next-p').textContent = endDay;
+
+}
+
+// --- Handle Add / Minus Date ---
+  function handleAddDate(elementDisplay, elementInput) {
+    var numDaysElement = document.getElementById(elementDisplay);
+    var numDaysVal = parseInt(numDaysElement.textContent, 10);
+    if (numDaysVal < 40) { 
+      numDaysVal += 1;
+      numDaysElement.textContent = numDaysVal;
+      document.getElementById(elementInput).value = numDaysVal;
+    }
+  }
+
+  function handleMinusDate(elementDisplay, elementInput) {
+    var numDaysElement = document.getElementById(elementDisplay);
+    var numDaysVal = parseInt(numDaysElement.textContent, 10);
+    if (numDaysVal > 1) { 
+      numDaysVal -= 1;
+      numDaysElement.textContent = numDaysVal;
+      document.getElementById(elementInput).value = numDaysVal;
+    }
+  }
+</script>
+<script>
+// --- Calendar Data ---
+    cal_days_labels = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+    // cal_months_labels = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September','October', 'November', 'December'];
+    cal_months_labels = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน','พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน','ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    cal_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    cal_current_date = new Date();
+
+// --- Render the select month ---
+    var monthSelect = document.getElementById('select-month');
+    for(var i=0; i<cal_months_labels.length; i++){  
+      var option = document.createElement("option");
+      option.value = i;
+      option.text = cal_months_labels[i];
+      if(i === cal_current_date.getMonth()){
+        option.selected = true;
+      }
+      monthSelect.appendChild(option);
+    }
+
+    monthSelect.addEventListener('change', function() {     
+      var selectedMonth = parseInt(this.value);
+      var selectedYear = parseInt(document.getElementById('select-year').value);
+      var calendar = new Calendar(selectedMonth, selectedYear);
+      calendar.generateHTML();
+      document.getElementById('calendar').innerHTML = calendar.getHTML();
+      var tds = document.querySelectorAll('.calendar-day');
+      tds.forEach(td => {
+         //check if td is not empty
+        if (td.textContent.trim() !== '') {
+          td.addEventListener('click', handleSelectDate);
+        } else {
+          td.style.cursor = 'default';
+        }
+      });
+    });
+
+// --- Render the select year ---
+    var yearSelect = document.getElementById('select-year');  
+    var startYear = cal_current_date.getFullYear() - 1;
+    var endYear = cal_current_date.getFullYear() + 1;   
+    for(var i=startYear; i<=endYear; i++){  
+      var option = document.createElement("option");
+      option.value = i;
+      option.text = i;
+      if(i === cal_current_date.getFullYear()){
+        option.selected = true;
+      }
+      yearSelect.appendChild(option);
+    }  
+
+    yearSelect.addEventListener('change', function() {     
+      var selectedYear = parseInt(this.value);
+      var selectedMonth = parseInt(document.getElementById('select-month').value);
+      var calendar = new Calendar(selectedMonth, selectedYear);
+      calendar.generateHTML();
+      document.getElementById('calendar').innerHTML = calendar.getHTML();
+      var tds = document.querySelectorAll('.calendar-day');
+      tds.forEach(td => {
+         //check if td is not empty
+        if (td.textContent.trim() !== '') {
+          td.addEventListener('click', handleSelectDate);
+        } else {
+          td.style.cursor = 'default';
+        }
+      });
+    });
+
+
+// --- Render Calendar ---
+    function Calendar(month, year) {
+      this.month = (isNaN(month) || month == null) ? cal_current_date.getMonth() : month;
+      this.year  = (isNaN(year) || year == null) ? cal_current_date.getFullYear() : year;
+      this.html = '';
+    }
+
+    Calendar.prototype.generateHTML = function(){
+      var firstDay = new Date(this.year, this.month, 1);
+      var startingDay = firstDay.getDay();
+      var monthLength = cal_days_in_month[this.month];
+
+      if (this.month == 1) { 
+        if((this.year % 4 == 0 && this.year % 100 != 0) || this.year % 400 == 0){
+          monthLength = 29;
+        }
+      }
+
+      var monthName = cal_months_labels[this.month];
+      var html = '<table class="calendar calendar-table ' + monthName + ' days-label">';
+      html += '<tr class="header"><th colspan="7" class="monthLabel">';
+      html += monthName + " " + this.year;
+      html += '</th></tr>';
+      html += '<tr class="header calendar-header">';
+      for(var i = 0; i <= 6; i++ ){
+        html += '<td class="calendar-header-day daysLabel currentMonth day">';
+        html += cal_days_labels[i];
+        html += '</td>';
+      }
+      html += '</tr><tr>';
+
+      var day = 1;
+      for (var i = 0; i < 9; i++) {
+        for (var j = 0; j <= 6; j++) {
+          var day2 = (day <=9 ) ? '0' + day : day;
+          var month2 = (this.month <9 ) ? '0' + (this.month+1) : this.month+1;
+          html += '<td class="calendar-day" data-date="' + this.year + '-' + month2 + '-' + day2 + '">';
+          if (day <= monthLength && (i > 0 || j >= startingDay)) {
+            html += day;
+            day++;
+          }
+          html += '</td>';
+        }
+        if (day > monthLength) {
+          if(i<5){
+            html += "<tr>";
+            for(a=0;a<7;a++){
+              html += '<td class="calendar-day" data-date="06-01"></td>';
+            }
+            html += "</tr>";
+          }
+          break;
+        } else {
+          html += '</tr><tr>';
+        }
+      }
+      html += '</tr></table>';
+      this.html = html;
+    }
+
+    Calendar.prototype.getHTML = function() {
+      return this.html;
+    }
+
+// --- Render Current Period Calendar ---
+    var calendar = new Calendar();
+    calendar.generateHTML();  
+    document.getElementById('calendar').innerHTML = calendar.getHTML();
+
+    var tds = document.querySelectorAll('.calendar-day');
+    tds.forEach(td => {
+        //check if td is not empty
+        if (td.textContent.trim() !== '') {
+          td.addEventListener('click', handleSelectDate);
+        } else {
+          td.style.cursor = 'default';
+        }
+      });
+
+// --- Handle Select Date ---
+    function handleSelectDate(event) {
+      var selectedDate = event.target.getAttribute('data-date');
+      document.getElementById('select-date').value = selectedDate;
+      var tds = document.querySelectorAll('.calendar-day');
+      tds.forEach(td => {
+        td.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      console.log(selectedDate);
+      }
+
+</script>
+</body>
+</html>

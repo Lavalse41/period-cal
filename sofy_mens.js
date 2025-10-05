@@ -1,3 +1,5 @@
+//CALENDAR FOR THIS MONTH
+
 // these are labels for the days of the week
 	cal_days_labels = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
 	//cal_days_labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -35,7 +37,7 @@
 		// do the header
 		var monthName = cal_months_labels[this.month];
 		
-		
+
 		var html = '<table class="calendar calendar-table ' + monthName + ' days-label">';
 		html += '<tr class="header"><th colspan="7" class="monthLabel">';
 		html +=  (this.month+1);
@@ -87,3 +89,4 @@
 	Calendar.prototype.getHTML = function() {
 		return this.html;
 	}
+
